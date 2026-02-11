@@ -32,8 +32,6 @@ public class OwnerFormController {
         return "owner-form";
     }
 
-
-    
     @PostMapping("/save")
     public String saveOrUpdate(@ModelAttribute OwnerPetDTO dto) {
 
@@ -47,27 +45,25 @@ public class OwnerFormController {
         owner.setName(dto.getOwnerName());
         owner.setMobile(dto.getMobile());
         owner.setCity(dto.getCity());
-
-        // 🔑 IMPORTANT: work with EXISTING collection
         Pet pet;
         if (owner.getPets() != null && !owner.getPets().isEmpty()) {
-            pet = owner.getPets().get(0); // single pet case
+            pet = owner.getPets().get(0); 
         } else {
             pet = new Pet();
             pet.setOwner(owner);
-            //owner.getPets().add(pet); // ✅ modify, don’t replace
+            //owner.getPets().add(pet); 
         }
 
         pet.setName(dto.getPetName());
         pet.setBreed(dto.getBreed());
 
-        // Appointments (same rule)
+      
         Appointment appointment = new Appointment();
         appointment.setAppointmentDate(dto.getAppointmentDate());
         appointment.setDescription(dto.getDescription());
         appointment.setPet(pet);
 
-        pet.getAppointments().add(appointment); // ✅ modify existing list
+        pet.getAppointments().add(appointment); 
 
         ownerService.saveOwner(owner);
         return "redirect:/";
@@ -97,10 +93,5 @@ public class OwnerFormController {
         return "owner-form";
     }
 
-
-
-    
-
-
-
 }
+
