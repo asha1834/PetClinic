@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Pet Clinic</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        a {
+            text-decoration: none;
+        }
+    </style>
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+</head>
+<body>
+
+<h2>🐾 Pet Clinic - Owners</h2>
+
+<a href="/owners/new">
+    <button>+ New Entry</button>
+</a>
+<br><br>
+
+<form method="get">
+    <input type="text" name="name" placeholder="Owner Name">
+    <input type="text" name="city" placeholder="City">
+    <input type="text" name="breed" placeholder="Pet Breed">
+    <button type="submit">Search</button>
+    
+    <a href="/" style="text-decoration:none;">
+        <button type="button" style="background:#ccc;">Reset</button>
+    </a>
+</form>
+<br>
+
+<table>
+    <thead>
+        <tr>
+            <th>Owner ID</th>
+            <th>Owner Name</th>
+            <th>Mobile</th>
+            <th>City</th>
+            <th>Pets</th>
+            
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr th:each="owner : ${owners}">
+            <td th:text="${owner.id}"></td>
+            <td th:text="${owner.name}"></td>
+            <td th:text="${owner.mobile}"></td>
+            <td th:text="${owner.city}"></td>
+
+           <td>
+    <div th:each="pet : ${owner.pets}" class="pet-card"  th:if="${pet.name != null}">
+        <div class="pet-name">
+            🐶 <b th:text="${pet.name}"></b>
+        </div>
+        <div style="font-size:12px; color:#666;">
+    Breed: <span th:text="${pet.breed}"></span>
+      </div>
+        
+
+        <div class="pet-actions">
+            <a href="#" th:onclick="'loadAppointments(' + ${pet.id} + ')'">📅 Appointments</a>
+            |
+            <a th:href="@{/appointments/new/{petId}(petId=${pet.id})}">➕ Appointment</a>
+            |
+            <a th:href="@{/pets/edit/{id}(id=${pet.id})}">✏️ Edit</a>
+        </div>
+    </div>
+
+    <a class="add-pet-btn"
+       th:href="@{/pets/new/{ownerId}(ownerId=${owner.id})}">
+       ➕ Add Pet
+    </a>
+</td>
+
+           <td class="actions">
+    <a class="action-btn edit"
+       th:href="@{/owners/edit/{id}(id=${owner.id})}">
+       ✏️ Edit
+    </a>
+
+    <a class="action-btn delete"
+       th:href="@{/owners/delete/{id}(id=${owner.id})}"
+       onclick="return confirm('Are you sure?')">
+       🗑️ Delete
+    </a>
+</td>
+
+
+        </tr>
+    </tbody>
+</table>
+
+<div id="appointmentModal"
+     style="display:none; position:fixed; top:20%; left:30%;
+     width:40%; background:#fff; border:1px solid #ccc; padding:20px;">
+
+    <h3>Appointments</h3>
+    <div id="appointmentContent"></div>
+
+    <button onclick="closeModal()" style="float:right;">Close</button>
+
+</div>
+
+<script>
+function loadAppointments(petId) {
+    fetch(`/api/appointments/pet/${petId}`)
+        .then(res => res.json())
+        .then(data => {
+            let html = "";
+
+            if (data.length === 0) {
+                html = "<p>No appointments found</p>";
+            } else {
+            	data.forEach(a => {
+            	    html += `
+            	        <p>
+            	            <b>Date:</b> ${a.appointmentDate}<br>
+            	            <b>Description:</b> ${a.description}<br>
+            	            <a href="/appointments/edit/${a.id}">✏️ Edit</a> |
+            	            <a href="/appointments/delete/${a.id}"
+            	               onclick="return confirm('Delete this appointment?')">🗑️ Delete</a>
+            	        </p>
+            	        <hr>
+            	    `;
+            	});
+
+            }
+
+            document.getElementById("appointmentContent").innerHTML = html;
+            document.getElementById("appointmentModal").style.display = "block";
+        });
+}
+
+function closeModal() {
+    document.getElementById("appointmentModal").style.display = "none";
+}
+</script>
+
+</body>
+</html>

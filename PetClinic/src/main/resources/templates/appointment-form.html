@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Appointment</title>
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+</head>
+<body>
+
+<h2>Appointment</h2>
+
+<form th:action="@{/appointments/save}"
+      th:object="${appointment}"
+      method="post">
+
+    <input type="hidden" th:field="*{id}">
+    <input type="hidden" th:field="*{pet.id}">
+
+    <label>Date:</label><br>
+    <input type="date" th:field="*{appointmentDate}" required><br><br>
+
+    <label>Description:</label><br>
+    <textarea th:field="*{description}" rows="4"></textarea><br><br>
+
+    <button type="submit">Save Appointment</button>
+</form>
+
+</body>
+</html>
