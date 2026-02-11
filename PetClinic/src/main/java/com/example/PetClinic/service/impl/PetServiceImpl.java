@@ -34,7 +34,7 @@ public class PetServiceImpl implements PetService {
     
     @Override
     public Pet savePet(Pet pet) {
-        return petRepository.save(pet);   // ✅ SAFE for managed pets
+        return petRepository.save(pet);   
     }
     
     @Override
@@ -42,3 +42,4 @@ public class PetServiceImpl implements PetService {
         petRepository.save(pet);
     }
 }
+
