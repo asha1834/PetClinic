@@ -16,28 +16,21 @@ public class OwnerController {
     public OwnerController(OwnerService ownerService) {
         this.ownerService = ownerService;
     }
-
-    // CREATE
     @PostMapping
     public Owner createOwner(@RequestBody Owner owner) {
         return ownerService.saveOwner(owner);
     }
-
-    // READ ALL
     @GetMapping
     public List<Owner> getAllOwners() {
         return ownerService.getAllOwners();
     }
-
-    // READ BY ID
     @GetMapping("/{id}")
     public Owner getOwnerById(@PathVariable Long id) {
         return ownerService.getOwnerById(id);
     }
-
-    // DELETE
     @DeleteMapping("/{id}")
     public void deleteOwner(@PathVariable Long id) {
         ownerService.deleteOwner(id);
     }
 }
+
